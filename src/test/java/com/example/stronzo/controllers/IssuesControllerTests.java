@@ -59,4 +59,28 @@ public class IssuesControllerTests {
                         om.writeValueAsString(Collections.singletonList(issue))));
 
     }
+
+    @Test
+    public void failsOnInvalidIssue() throws Exception {
+        var issueWithTooShortDescription = new IssueDto("d");
+        var body = om.writeValueAsString(issueWithTooShortDescription);
+        mvc.perform(
+                MockMvcRequestBuilders.put("/issues")
+                        .content(body)
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.moreDetails.description").value("length must be between 4 and 2147483647"));
+    }
+
+
+    @Test
+    public void failsOnEmptyBody() throws Exception {
+        mvc.perform(
+                MockMvcRequestBuilders.put("/issues")
+        )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Did you forget to add a body"));
+    }
+
 }
