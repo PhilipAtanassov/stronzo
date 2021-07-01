@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'maven-publish'
 }
 
 group = 'com.example'
@@ -25,4 +26,14 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			version = '0.0.1'
+
+			artifact bootJar
+		}
+	}
 }
